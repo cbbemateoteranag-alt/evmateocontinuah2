@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ByteForge — Tienda de Computadoras</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="src/css/estilos.css" />
+</head>
+<body>
+
+  <!-- ================= ENCABEZADO ================= -->
+  <header class="encabezado">
+    <div class="contenedor encabezado__interior">
+      <div class="marca">
+        <span class="marca__icono">⌁</span>
+        <span class="marca__texto">Byte<strong>Forge</strong></span>
+      </div>
+
+      <div class="buscador">
+        <input
+          type="text"
+          id="campo-busqueda"
+          placeholder="Buscar por nombre, procesador, GPU…"
+          aria-label="Buscar productos"
+        />
+        <span class="buscador__icono">⌕</span>
+      </div>
+
+      <button id="boton-carrito" class="boton-carrito" aria-label="Abrir carrito de compras">
+        <span class="boton-carrito__icono">🛒</span>
+        <span class="boton-carrito__contador" id="contador-carrito">0</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ================= HERO ================= -->
+  <section class="hero">
+    <div class="contenedor hero__interior">
+      <p class="hero__eyebrow">Componentes reales. Precios sin vueltas.</p>
+      <h1 class="hero__titulo">
+        Arma tu próximo equipo<br />sin adivinar las especificaciones.
+      </h1>
+      <p class="hero__descripcion">
+        Comparamos procesador, memoria, almacenamiento y tarjeta gráfica en cada
+        tarjeta, para que decidas mirando datos, no fotos bonitas.
+      </p>
+      <div class="hero__stats">
+        <div class="hero__stat"><span class="hero__stat-num">12</span><span class="hero__stat-label">equipos en catálogo</span></div>
+        <div class="hero__stat"><span class="hero__stat-num">3</span><span class="hero__stat-label">categorías de uso</span></div>
+        <div class="hero__stat"><span class="hero__stat-num">24h</span><span class="hero__stat-label">despacho estimado</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FILTROS ================= -->
+  <section class="contenedor barra-filtros" id="barra-filtros">
+    <div class="filtros-categoria" id="filtros-categoria">
+      <button class="chip chip--activo" data-categoria="Todas">Todas</button>
+      <button class="chip" data-categoria="Gamer">Gamer</button>
+      <button class="chip" data-categoria="Oficina">Oficina</button>
+      <button class="chip" data-categoria="Trabajo Pesado">Trabajo Pesado</button>
+    </div>
+    <p class="filtros-resultado" id="texto-resultados">Mostrando 12 equipos</p>
+  </section>
+
+  <!-- ================= CATÁLOGO ================= -->
+  <main class="contenedor">
+    <section id="grilla-productos" class="grilla-productos" aria-live="polite">
+      <!-- Las tarjetas de producto se insertan aquí vía JavaScript -->
+    </section>
+    <p id="mensaje-sin-resultados" class="mensaje-sin-resultados oculto">
+      No encontramos equipos que coincidan con tu búsqueda. Probá con otro término o categoría.
+    </p>
+  </main>
+
+  <!-- ================= PIE DE PÁGINA ================= -->
+  <footer class="pie">
+    <div class="contenedor pie__interior">
+      <span>© 2026 ByteForge — Tienda de Computadoras. Proyecto de demostración.</span>
+      <span>Hecho con HTML, CSS y JavaScript puro.</span>
+    </div>
+  </footer>
+
+  <!-- ================= PANEL LATERAL: CARRITO ================= -->
+  <div id="fondo-panel" class="fondo-panel oculto"></div>
+
+  <aside id="panel-carrito" class="panel-carrito" aria-label="Carrito de compras">
+    <div class="panel-carrito__encabezado">
+      <h2>Tu carrito</h2>
+      <button id="cerrar-carrito" class="boton-cerrar" aria-label="Cerrar carrito">✕</button>
+    </div>
+
+    <div id="lista-carrito" class="panel-carrito__lista">
+      <!-- Ítems del carrito insertados por JavaScript -->
+    </div>
+
+    <p id="carrito-vacio" class="carrito-vacio">
+      Tu carrito está vacío. Explorá el catálogo y agregá algún equipo.
+    </p>
+
+    <div class="panel-carrito__resumen" id="resumen-carrito">
+      <div class="resumen-linea">
+        <span>Subtotal</span>
+        <span id="valor-subtotal">Bs 0.00</span>
+      </div>
+      <div class="resumen-linea">
+        <span>Impuestos (16%)</span>
+        <span id="valor-impuestos">Bs 0.00</span>
+      </div>
+      <div class="resumen-linea resumen-linea--total">
+        <span>Total</span>
+        <span id="valor-total">Bs 0.00</span>
+      </div>
+      <button id="boton-pagar" class="boton-primario boton-primario--full">
+        Proceder al pago
+      </button>
+    </div>
+  </aside>
+
+  <!-- ================= MODAL: CHECKOUT ================= -->
+  <div id="modal-checkout" class="modal oculto">
+    <div class="modal__contenido">
+      <button class="boton-cerrar modal__cerrar" id="cerrar-checkout" aria-label="Cerrar formulario">✕</button>
+      <h2 class="modal__titulo">Finalizar pedido</h2>
+      <p class="modal__subtitulo">Completá tus datos para confirmar la compra. Esta pasarela de pago es simulada.</p>
+
+      <form id="formulario-checkout" class="formulario">
+        <fieldset class="formulario__grupo">
+          <legend>Datos personales</legend>
+          <div class="formulario__fila">
+            <div class="campo">
+              <label for="nombre-cliente">Nombre completo</label>
+              <input type="text" id="nombre-cliente" required placeholder="Ej: Marcelo Rojas" />
+            </div>
+            <div class="campo">
+              <label for="correo-cliente">Correo electrónico</label>
+              <input type="email" id="correo-cliente" required placeholder="ejemplo@correo.com" />
+            </div>
+          </div>
+          <div class="campo">
+            <label for="telefono-cliente">Teléfono</label>
+            <input type="tel" id="telefono-cliente" required placeholder="+591 700 00000" />
+          </div>
+        </fieldset>
+
+        <fieldset class="formulario__grupo">
+          <legend>Dirección de envío</legend>
+          <div class="campo">
+            <label for="direccion-envio">Dirección</label>
+            <input type="text" id="direccion-envio" required placeholder="Calle, número, referencia" />
+          </div>
+          <div class="formulario__fila">
+            <div class="campo">
+              <label for="ciudad-envio">Ciudad</label>
+              <input type="text" id="ciudad-envio" required placeholder="Cochabamba" />
+            </div>
+            <div class="campo">
+              <label for="codigo-postal">Código postal</label>
+              <input type="text" id="codigo-postal" required placeholder="0000" />
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="formulario__grupo">
+          <legend>Método de pago</legend>
+          <div class="campo">
+            <label for="metodo-pago">Seleccioná una opción</label>
+            <select id="metodo-pago" required>
+              <option value="">Elegí un método</option>
+              <option value="Tarjeta de crédito">Tarjeta de crédito</option>
+              <option value="Tarjeta de débito">Tarjeta de débito</option>
+              <option value="Transferencia bancaria">Transferencia bancaria</option>
+              <option value="Pago contra entrega">Pago contra entrega</option>
+            </select>
+          </div>
+          <div class="formulario__fila" id="campos-tarjeta">
+            <div class="campo">
+              <label for="numero-tarjeta">Número de tarjeta</label>
+              <input type="text" id="numero-tarjeta" placeholder="0000 0000 0000 0000" maxlength="19" />
+            </div>
+            <div class="campo campo--corto">
+              <label for="vencimiento-tarjeta">Vencimiento</label>
+              <input type="text" id="vencimiento-tarjeta" placeholder="MM/AA" maxlength="5" />
+            </div>
+          </div>
+        </fieldset>
+
+        <div class="modal__resumen-pedido" id="resumen-pedido-modal">
+          <!-- Resumen de productos insertado por JavaScript -->
+        </div>
+
+        <button type="submit" class="boton-primario boton-primario--full">
+          Confirmar pedido
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: CONFIRMACIÓN DE PEDIDO ================= -->
+  <div id="modal-confirmacion" class="modal oculto">
+    <div class="modal__contenido modal__contenido--angosto">
+      <div class="confirmacion__icono">✓</div>
+      <h2 class="modal__titulo">¡Pedido confirmado!</h2>
+      <p class="confirmacion__numero">Número de orden: <strong id="numero-orden">—</strong></p>
+      <p class="modal__subtitulo">
+        Enviamos el comprobante a tu correo. Guardá el número de orden para
+        hacer seguimiento de tu envío.
+      </p>
+      <div id="detalle-confirmacion" class="confirmacion__detalle">
+        <!-- Detalle del pedido insertado por JavaScript -->
+      </div>
+      <button id="cerrar-confirmacion" class="boton-primario boton-primario--full">
+        Seguir comprando
+      </button>
+    </div>
+  </div>
+
+  <script src="src/js/datos.js"></script>
+  <script src="src/js/carrito.js"></script>
+  <script src="src/js/principal.js"></script>
+</body>
+</html>
